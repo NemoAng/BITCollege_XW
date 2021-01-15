@@ -11,7 +11,7 @@
 namespace Utility
 {
     /// <summary>
-    /// Provides string process.
+    /// Provides substring process.
     /// </summary>
     public static class StringHelper
     {

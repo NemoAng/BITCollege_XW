@@ -19,7 +19,7 @@ namespace BITCollege_XW.Models
     /// <summary>
     /// GradePointState Model - to represent GradePointState table in database.
     /// </summary>
-    public class GradePointState
+    public abstract class GradePointState
     {
         //Annotation to have database generate next available primary key.
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -110,19 +110,19 @@ namespace BITCollege_XW.Models
         //StudentNumber is between 10000000 and 99999999.
         [Required]
         [Range(10000000, 99999999, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
-        [Display(Name = "Student\nNumber")]
+        [Display(Name = "Student Number")]
         public long StudentNumber { get; set; }
 
         //First name length between 1 and 35.
         [Required]
         [StringLength(35, MinimumLength = 1)]
-        [Display(Name = "First\nName")]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         //Last name length between 1 and 35.
         [Required]
         [StringLength(35, MinimumLength = 1)]
-        [Display(Name = "Last\nName")]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
         //Address length between 1 and 35.
@@ -263,14 +263,14 @@ namespace BITCollege_XW.Models
         //0 or 1 Student object.
         public virtual Student Student { get; set; }
 
-        //0 or 1 Student object.
+        //0 or 1 Course object.
         public virtual Course Course { get; set; }
     }
 
     /// <summary>
     /// Course Model - to represent Course table in database.
     /// </summary>
-    public class Course
+    public abstract class Course
     {
         //Annotation to have database generate next available primary key.
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -293,6 +293,7 @@ namespace BITCollege_XW.Models
         [Display(Name = "Credit Hours")]
         public double CreditHours { get; set; }
 
+        //Final weight in currency.
         [Required]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:C2}")]
         [Display(Name = "Tuition Amount")]
@@ -309,7 +310,7 @@ namespace BITCollege_XW.Models
         public string Notes { get; set; }
 
         //AcademicProgram collection.
-        public virtual ICollection<AcademicProgram> AcademicProgram { get; set; }
+        public virtual AcademicProgram AcademicProgram { get; set; }
 
         //Registration collection.
         public virtual ICollection<Registration> Registration { get; set; }
@@ -320,16 +321,19 @@ namespace BITCollege_XW.Models
     /// </summary>
     public class GradedCourse: Course
     {
+        //Assignment weight in percentage.
         [Required]
         [Display(Name = "Assignment Weight")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:P2}")]
         public double AssignmentWeight { get; set; }
 
+        //Midterm weight in percentage.
         [Required]
         [Display(Name = "Midterm Weight")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:P2}")]
         public double MidtermWeight { get; set; }
 
+        //Final weight in percentage.
         [Required]
         [Display(Name = "Final Weight")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:P2}")]
