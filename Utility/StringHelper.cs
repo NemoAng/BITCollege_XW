@@ -11,7 +11,7 @@
 namespace Utility
 {
     /// <summary>
-    /// Provides string process.
+    /// Provides substring process.
     /// </summary>
     public static class StringHelper
     {
@@ -23,7 +23,7 @@ namespace Utility
         /// <returns></returns>
         public static string SubString(string name, char ch)
         {
-            int index = name.IndexOf(ch);
+            int index = name.IndexOf(ch, 1);
             return name.Substring(0, index);
         }
     }

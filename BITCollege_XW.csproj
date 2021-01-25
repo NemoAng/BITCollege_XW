@@ -45,6 +45,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -123,7 +129,20 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AcademicProgramsController.cs" />
+    <Compile Include="Controllers\AuditCoursesController.cs" />
+    <Compile Include="Controllers\CoursesController.cs" />
+    <Compile Include="Controllers\GradedCoursesController.cs" />
+    <Compile Include="Controllers\GradePointStatesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HonoursStatesController.cs" />
+    <Compile Include="Controllers\MasteryCoursesController.cs" />
+    <Compile Include="Controllers\ProbationStatesController.cs" />
+    <Compile Include="Controllers\RegistrationsController.cs" />
+    <Compile Include="Controllers\RegularStatesController.cs" />
+    <Compile Include="Controllers\StudentsController.cs" />
+    <Compile Include="Controllers\SuspendedStatesController.cs" />
+    <Compile Include="Data\BITCollege_XWContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -166,9 +185,61 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Students\Create.cshtml" />
+    <Content Include="Views\Students\Delete.cshtml" />
+    <Content Include="Views\Students\Details.cshtml" />
+    <Content Include="Views\Students\Edit.cshtml" />
+    <Content Include="Views\Students\Index.cshtml" />
+    <Content Include="Views\AcademicPrograms\Create.cshtml" />
+    <Content Include="Views\AcademicPrograms\Delete.cshtml" />
+    <Content Include="Views\AcademicPrograms\Details.cshtml" />
+    <Content Include="Views\AcademicPrograms\Edit.cshtml" />
+    <Content Include="Views\AcademicPrograms\Index.cshtml" />
+    <Content Include="Views\Registrations\Create.cshtml" />
+    <Content Include="Views\Registrations\Delete.cshtml" />
+    <Content Include="Views\Registrations\Details.cshtml" />
+    <Content Include="Views\Registrations\Edit.cshtml" />
+    <Content Include="Views\Registrations\Index.cshtml" />
+    <Content Include="Views\ProbationStates\Create.cshtml" />
+    <Content Include="Views\ProbationStates\Delete.cshtml" />
+    <Content Include="Views\ProbationStates\Details.cshtml" />
+    <Content Include="Views\ProbationStates\Edit.cshtml" />
+    <Content Include="Views\ProbationStates\Index.cshtml" />
+    <Content Include="Views\HonoursStates\Create.cshtml" />
+    <Content Include="Views\HonoursStates\Delete.cshtml" />
+    <Content Include="Views\HonoursStates\Details.cshtml" />
+    <Content Include="Views\HonoursStates\Edit.cshtml" />
+    <Content Include="Views\HonoursStates\Index.cshtml" />
+    <Content Include="Views\RegularStates\Create.cshtml" />
+    <Content Include="Views\RegularStates\Delete.cshtml" />
+    <Content Include="Views\RegularStates\Details.cshtml" />
+    <Content Include="Views\RegularStates\Edit.cshtml" />
+    <Content Include="Views\RegularStates\Index.cshtml" />
+    <Content Include="Views\GradedCourses\Create.cshtml" />
+    <Content Include="Views\GradedCourses\Delete.cshtml" />
+    <Content Include="Views\GradedCourses\Details.cshtml" />
+    <Content Include="Views\GradedCourses\Edit.cshtml" />
+    <Content Include="Views\GradedCourses\Index.cshtml" />
+    <Content Include="Views\AuditCourses\Create.cshtml" />
+    <Content Include="Views\AuditCourses\Delete.cshtml" />
+    <Content Include="Views\AuditCourses\Details.cshtml" />
+    <Content Include="Views\AuditCourses\Edit.cshtml" />
+    <Content Include="Views\AuditCourses\Index.cshtml" />
+    <Content Include="Views\MasteryCourses\Create.cshtml" />
+    <Content Include="Views\MasteryCourses\Delete.cshtml" />
+    <Content Include="Views\MasteryCourses\Details.cshtml" />
+    <Content Include="Views\MasteryCourses\Edit.cshtml" />
+    <Content Include="Views\MasteryCourses\Index.cshtml" />
+    <Content Include="Views\SuspendedStates\Create.cshtml" />
+    <Content Include="Views\SuspendedStates\Delete.cshtml" />
+    <Content Include="Views\SuspendedStates\Details.cshtml" />
+    <Content Include="Views\SuspendedStates\Edit.cshtml" />
+    <Content Include="Views\SuspendedStates\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Courses\" />
+    <Folder Include="Views\GradePointStates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
