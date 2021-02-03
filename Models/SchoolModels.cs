@@ -13,14 +13,20 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Utility;
+using BITCollege_XW.Data;
+using BITCollege_XW.Models;
+using System.Linq;
 
 namespace BITCollege_XW.Models
 {
     /// <summary>
     /// GradePointState Model - to represent GradePointState table in database.
     /// </summary>
-    public abstract class GradePointState
+    //public abstract class GradePointState
+    public class GradePointState
     {
+        protected static BITCollege_XWContext singletonDBContext = new BITCollege_XWContext();
+
         //Annotation to have database generate next available primary key.
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int GradePointStateId { get; set; }
@@ -52,6 +58,18 @@ namespace BITCollege_XW.Models
             }
         }
 
+        //Tuition Rate adjustment.
+        public virtual double TuitionRateAdjustment(Student student) 
+        {
+            return 0;
+        }
+
+        //State change check.
+        public virtual void StateChangeCheck(Student student)
+        {
+
+        }
+
         //Represents many students contained by GradePointState.
         public virtual ICollection<Student> Student { get; set; }
     }
@@ -61,7 +79,75 @@ namespace BITCollege_XW.Models
     /// </summary>
     public class SuspendedState : GradePointState
     {
-        private SuspendedState suspendedState;
+        private static SuspendedState suspendedState;
+
+        private SuspendedState()
+        {
+            LowerLimit = 0.0;
+            UpperLimit = 1.0;
+            TuitionRateFactor = 1.1;
+        }
+
+
+        /// <summary>
+        /// Get SuspendedState instance.
+        /// </summary>
+        /// <returns></returns>
+        public static SuspendedState GetInstance()
+        {
+            if(suspendedState == null)
+            {
+                SuspendedState susState = singletonDBContext.SuspendedStates.SingleOrDefault();
+                if (susState != null)
+                {
+                    suspendedState = susState;
+                } 
+                else
+                {
+                    suspendedState = new SuspendedState();
+                    singletonDBContext.GradePointStates.Add(suspendedState);
+                    singletonDBContext.SaveChanges();
+                }
+            }
+
+            return suspendedState;
+        }
+
+        /// <summary>
+        /// Tuition Rate adjustment.
+        /// </summary>
+        /// <param name="student">current student.</param>
+        /// <returns></returns>
+        public override double TuitionRateAdjustment(Student student)
+        {
+            if (student.GradePointAverage < 0.5)
+            {
+                return TuitionRateAdjustmentValue.ADJ_P005;
+            }    
+            else if(student.GradePointAverage < 0.75)
+            {
+                return TuitionRateAdjustmentValue.ADJ_P002;
+            }
+            else
+            {
+                return TuitionRateAdjustmentValue.ADJ_NULL;
+            }       
+        }
+
+        /// <summary>
+        /// State change check.
+        /// </summary>
+        /// <param name="student">current student</param>
+        public override void StateChangeCheck(Student student)
+        {
+            if(student.GradePointAverage > UpperLimit)
+            {
+                student.GradePointStateId = ProbationState.GetInstance().GradePointStateId;
+
+                //State check chain
+                ProbationState.GetInstance().StateChangeCheck(student);
+            }
+        }
     }
 
     /// <summary>
@@ -69,7 +155,81 @@ namespace BITCollege_XW.Models
     /// </summary>
     public class ProbationState : GradePointState
     {
-        private ProbationState probationState;
+        private static ProbationState probationState;
+
+        private ProbationState()
+        {
+            LowerLimit = 1.0;
+            UpperLimit = 2.0;
+            TuitionRateFactor = 1.075;
+        }
+
+        /// <summary>
+        /// Get a probation state instance
+        /// </summary>
+        /// <returns></returns>
+        public static ProbationState GetInstance()
+        {
+            if (probationState == null)
+            {
+                ProbationState proState = singletonDBContext.ProbationStates.SingleOrDefault();
+                if (proState != null)
+                {
+                    probationState = proState;
+                }
+                else
+                {
+                    probationState = new ProbationState();
+                    singletonDBContext.GradePointStates.Add(probationState);
+                    singletonDBContext.SaveChanges();
+                }
+            }
+
+            return probationState;
+        }
+
+        public override double TuitionRateAdjustment(Student student)
+        {
+            int courseNumCompleted = 0;
+
+            List<Registration> registrations = singletonDBContext.Registrations.ToList<Registration>();
+
+            foreach (var reg in registrations)
+            {
+                if (reg.Grade != null)
+                {
+                    courseNumCompleted++;
+                }
+            }
+
+            if (courseNumCompleted >= (int)CourseFinished.FIVE)
+            {
+                return TuitionRateAdjustmentValue.ADJ_M004;//discussion???
+            }
+            return TuitionRateAdjustmentValue.ADJ_NULL;
+        }
+
+        /// <summary>
+        /// State change check
+        /// </summary>
+        /// <param name="student">current student.</param>
+        public override void StateChangeCheck(Student student)
+        {
+            if (student.GradePointAverage > UpperLimit)
+            {
+                student.GradePointStateId = RegularState.GetInstance().GradePointStateId;
+
+                //State check chain
+                RegularState.GetInstance().StateChangeCheck(student);
+            }
+            else if (student.GradePointAverage < LowerLimit)
+            {
+                student.GradePointStateId = SuspendedState.GetInstance().GradePointStateId;
+
+                //State check chain
+                SuspendedState.GetInstance().StateChangeCheck(student);
+            }
+        }
     }
 
 
@@ -78,7 +238,65 @@ namespace BITCollege_XW.Models
     /// </summary>
     public class RegularState : GradePointState
     {
-        private RegularState regularState;
+        private static RegularState regularState;
+
+        private RegularState()
+        {
+            LowerLimit = 2.0;
+            UpperLimit = 3.7;
+            TuitionRateFactor = 1.0;
+        }
+
+        /// <summary>
+        /// Get regular state instance
+        /// </summary>
+        /// <returns></returns>
+        public static RegularState GetInstance()
+        {
+            if (regularState == null)
+            {
+                RegularState regState = singletonDBContext.RegularStates.SingleOrDefault();
+                if (regState != null)
+                {
+                    regularState = regState;
+                }
+                else
+                {
+                    regularState = new RegularState();
+                    singletonDBContext.GradePointStates.Add(regularState);
+                    singletonDBContext.SaveChanges();
+                }
+            }
+
+            return regularState;
+        }
+
+        public override double TuitionRateAdjustment(Student student)
+        {
+            return TuitionRateAdjustmentValue.ADJ_NULL;
+        }
+
+        /// <summary>
+        /// State change check
+        /// </summary>
+        /// <param name="student">current student.</param>
+        public override void StateChangeCheck(Student student)
+        {
+            if (student.GradePointAverage > UpperLimit)
+            {
+                student.GradePointStateId = HonoursState.GetInstance().GradePointStateId;
+
+                //State check chain
+                HonoursState.GetInstance().StateChangeCheck(student);
+            }
+            else if (student.GradePointAverage < LowerLimit)
+            {
+                student.GradePointStateId = ProbationState.GetInstance().GradePointStateId;
+
+                //State check chain
+                ProbationState.GetInstance().StateChangeCheck(student);
+            }
+        }
     }
 
     /// <summary>
@@ -86,7 +304,82 @@ namespace BITCollege_XW.Models
     /// </summary>
     public class HonoursState : GradePointState
     {
-        private HonoursState honoursState;
+        private static HonoursState honoursState;
+
+        private HonoursState()
+        {
+            LowerLimit = 3.7;
+            UpperLimit = 4.5;
+            TuitionRateFactor = 0.9;
+        }
+
+        public static HonoursState GetInstance()
+        {
+            if (honoursState == null)
+            {
+                HonoursState horState = singletonDBContext.HonoursStates.SingleOrDefault();
+                if (horState != null)
+                {
+                    honoursState = horState;
+                }
+                else
+                {
+                    honoursState = new HonoursState();
+                    singletonDBContext.GradePointStates.Add(honoursState);
+                    singletonDBContext.SaveChanges();
+                }
+            }
+
+            return honoursState;
+        }
+
+        public override double TuitionRateAdjustment(Student student)
+        {
+            double discount = 0.0;
+            int courseNumCompleted = 0;
+
+            List<Registration> registrations = singletonDBContext.Registrations.ToList<Registration>();
+
+            foreach (var reg in registrations)
+            {
+                if (reg.Grade != null)
+                {
+                    courseNumCompleted++;
+                }
+            }
+
+            if (courseNumCompleted >= (int)CourseFinished.FIVE)
+            {
+                discount += TuitionRateAdjustmentValue.ADJ_M015;
+                if (student.GradePointAverage > 4.25)
+                {
+                    discount += TuitionRateAdjustmentValue.ADJ_M002;
+                }
+            }
+            else
+            {
+                if (student.GradePointAverage > 4.25)
+                {
+                    discount += TuitionRateAdjustmentValue.ADJ_M002;
+                }
+            }
+            return discount;
+        }
+
+        /// <summary>
+        /// State change check
+        /// </summary>
+        /// <param name="student">current student.</param>
+        public override void StateChangeCheck(Student student)
+        {
+            if (student.GradePointAverage < LowerLimit)
+            {
+                student.GradePointStateId = RegularState.GetInstance().GradePointStateId;
+
+                //State check chain
+                RegularState.GetInstance().StateChangeCheck(student);
+            }
+        }
     }
 
     /// <summary>
@@ -94,6 +387,9 @@ namespace BITCollege_XW.Models
     /// </summary>
     public class Student
     {
+        //database context.
+        BITCollege_XWContext db = new BITCollege_XWContext();
+
         //Annotation to have database generate next available primary key.
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int StudentID { get; set; }
@@ -195,6 +491,12 @@ namespace BITCollege_XW.Models
         //More than 1 Registration object.
         public virtual ICollection<Registration> Registration { get; set; }
 
+        //Change Grade Point State.
+        public void ChangeState()
+        {
+            GradePointState gradePointState = db.GradePointStates.Find(this.GradePointStateId);
+            gradePointState.StateChangeCheck(this);
+        }
     }
 
     /// <summary>

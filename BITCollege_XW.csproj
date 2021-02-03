@@ -200,21 +200,15 @@
     <Content Include="Views\Registrations\Details.cshtml" />
     <Content Include="Views\Registrations\Edit.cshtml" />
     <Content Include="Views\Registrations\Index.cshtml" />
-    <Content Include="Views\ProbationStates\Create.cshtml" />
     <Content Include="Views\ProbationStates\Delete.cshtml" />
     <Content Include="Views\ProbationStates\Details.cshtml" />
     <Content Include="Views\ProbationStates\Edit.cshtml" />
-    <Content Include="Views\ProbationStates\Index.cshtml" />
-    <Content Include="Views\HonoursStates\Create.cshtml" />
     <Content Include="Views\HonoursStates\Delete.cshtml" />
     <Content Include="Views\HonoursStates\Details.cshtml" />
     <Content Include="Views\HonoursStates\Edit.cshtml" />
-    <Content Include="Views\HonoursStates\Index.cshtml" />
-    <Content Include="Views\RegularStates\Create.cshtml" />
     <Content Include="Views\RegularStates\Delete.cshtml" />
     <Content Include="Views\RegularStates\Details.cshtml" />
     <Content Include="Views\RegularStates\Edit.cshtml" />
-    <Content Include="Views\RegularStates\Index.cshtml" />
     <Content Include="Views\GradedCourses\Create.cshtml" />
     <Content Include="Views\GradedCourses\Delete.cshtml" />
     <Content Include="Views\GradedCourses\Details.cshtml" />
@@ -230,10 +224,12 @@
     <Content Include="Views\MasteryCourses\Details.cshtml" />
     <Content Include="Views\MasteryCourses\Edit.cshtml" />
     <Content Include="Views\MasteryCourses\Index.cshtml" />
-    <Content Include="Views\SuspendedStates\Create.cshtml" />
     <Content Include="Views\SuspendedStates\Delete.cshtml" />
     <Content Include="Views\SuspendedStates\Details.cshtml" />
     <Content Include="Views\SuspendedStates\Edit.cshtml" />
+    <Content Include="Views\HonoursStates\Index.cshtml" />
+    <Content Include="Views\ProbationStates\Index.cshtml" />
+    <Content Include="Views\RegularStates\Index.cshtml" />
     <Content Include="Views\SuspendedStates\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>

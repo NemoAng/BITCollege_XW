@@ -1,0 +1,16 @@
+https://localhost:44335/students\\\
+https://localhost:44335/academicprograms\\\
+https://localhost:44335/registrations\\\
+
+https://localhost:44335/courses...........
+https://localhost:44335/AuditCourses\\\
+https://localhost:44335/masterycourses\\\
+https://localhost:44335/gradedcourses\\\
+
+
+https://localhost:44335/gradepointstates...........
+https://localhost:44335/SuspendedStates\\yes, 0.0-1.0-1.1
+https://localhost:44335/probationstates\\\yes, 1.0-2.0-1.075
+https://localhost:44335/RegularStates\\\wrong, 2.0-3.7-1.0
+https://localhost:44335/HonoursStates\\\error, 3.7-4.5-0.9
+
