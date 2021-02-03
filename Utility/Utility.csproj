@@ -41,11 +41,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessRules.cs" />
+    <Compile Include="CourseFinished.cs" />
     <Compile Include="CourseType.cs" />
     <Compile Include="GradePointValue.cs" />
     <Compile Include="Numeric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringHelper.cs" />
+    <Compile Include="TuitionRateAdjustmentValue.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

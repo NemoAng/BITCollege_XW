@@ -14,7 +14,8 @@ namespace BITCollege_XW.Controllers
         // GET: ProbationStates
         public ActionResult Index()
         {
-            return View(db.ProbationStates.ToList());
+            //return View(db.ProbationStates.ToList());
+            return View(ProbationState.GetInstance());
         }
 
         // GET: ProbationStates/Details/5

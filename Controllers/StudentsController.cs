@@ -50,6 +50,9 @@ namespace BITCollege_XW.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Change grade point state calling. 
+                student.ChangeState();
+
                 db.Students.Add(student);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -86,6 +89,9 @@ namespace BITCollege_XW.Controllers
         {
             if (ModelState.IsValid)
             {
+                //Change grade point state calling. 
+                student.ChangeState();
+
                 db.Entry(student).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
