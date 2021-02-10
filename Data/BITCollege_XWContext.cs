@@ -51,5 +51,19 @@ namespace BITCollege_XW.Data
 
         //HonoursState dbset.
         public System.Data.Entity.DbSet<BITCollege_XW.Models.HonoursState> HonoursStates { get; set; }
+
+        public System.Data.Entity.DbSet<BITCollege_XW.Models.StudentCard> StudentCards { get; set; }
+
+        public System.Data.Entity.DbSet<BITCollege_XW.Models.NextUniqueNumber> NextUniqueNumbers { get; set; }
+
+        public System.Data.Entity.DbSet<BITCollege_XW.Models.NextAuditCourse> NextAuditCourses { get; set; }
+
+        public System.Data.Entity.DbSet<BITCollege_XW.Models.NextGradedCourse> NextGradedCourses { get; set; }
+
+        public System.Data.Entity.DbSet<BITCollege_XW.Models.NextMasteryCourse> NextMasteryCourses { get; set; }
+
+        public System.Data.Entity.DbSet<BITCollege_XW.Models.NextRegistration> NextRegistrations { get; set; }
+
+        public System.Data.Entity.DbSet<BITCollege_XW.Models.NextStudent> NextStudents { get; set; }
     }
 }

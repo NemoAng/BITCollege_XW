@@ -16,6 +16,8 @@ using Utility;
 using BITCollege_XW.Data;
 using BITCollege_XW.Models;
 using System.Linq;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace BITCollege_XW.Models
 {
@@ -23,7 +25,7 @@ namespace BITCollege_XW.Models
     /// GradePointState Model - to represent GradePointState table in database.
     /// </summary>
     //public abstract class GradePointState
-    public class GradePointState
+    public abstract class GradePointState
     {
         protected static BITCollege_XWContext singletonDBContext = new BITCollege_XWContext();
 
@@ -51,7 +53,7 @@ namespace BITCollege_XW.Models
 
         //Indicate GradePointState name.
         [Display(Name = "Grade Point State")]
-        public string Description { 
+        public string Description {
             get
             {
                 return StringHelper.SubString(this.GetType().Name, 'S');
@@ -59,7 +61,7 @@ namespace BITCollege_XW.Models
         }
 
         //Tuition Rate adjustment.
-        public virtual double TuitionRateAdjustment(Student student) 
+        public virtual double TuitionRateAdjustment(Student student)
         {
             return 0;
         }
@@ -95,13 +97,13 @@ namespace BITCollege_XW.Models
         /// <returns></returns>
         public static SuspendedState GetInstance()
         {
-            if(suspendedState == null)
+            if (suspendedState == null)
             {
                 SuspendedState susState = singletonDBContext.SuspendedStates.SingleOrDefault();
                 if (susState != null)
                 {
                     suspendedState = susState;
-                } 
+                }
                 else
                 {
                     suspendedState = new SuspendedState();
@@ -123,15 +125,15 @@ namespace BITCollege_XW.Models
             if (student.GradePointAverage < 0.5)
             {
                 return TuitionRateAdjustmentValue.ADJ_P005;
-            }    
-            else if(student.GradePointAverage < 0.75)
+            }
+            else if (student.GradePointAverage < 0.75)
             {
                 return TuitionRateAdjustmentValue.ADJ_P002;
             }
             else
             {
                 return TuitionRateAdjustmentValue.ADJ_NULL;
-            }       
+            }
         }
 
         /// <summary>
@@ -140,7 +142,7 @@ namespace BITCollege_XW.Models
         /// <param name="student">current student</param>
         public override void StateChangeCheck(Student student)
         {
-            if(student.GradePointAverage > UpperLimit)
+            if (student.GradePointAverage > UpperLimit)
             {
                 student.GradePointStateId = ProbationState.GetInstance().GradePointStateId;
 
@@ -404,8 +406,8 @@ namespace BITCollege_XW.Models
         public int? AcademicProgramId { get; set; }
 
         //StudentNumber is between 10000000 and 99999999.
-        [Required]
-        [Range(10000000, 99999999, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
+        //[Required]
+        //[Range(10000000, 99999999, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         [Display(Name = "Student Number")]
         public long StudentNumber { get; set; }
 
@@ -438,7 +440,7 @@ namespace BITCollege_XW.Models
 
         //Canada post code.
         [Required]
-        [RegularExpression("[^dfioquwzDFIOQUWZ0-9]([0-9][^dfioquDFIOQU0-9])[ ]?([0-9][^dfioquDFIOQU0-9])[0-9]", 
+        [RegularExpression("[^dfioquwzDFIOQUWZ0-9]([0-9][^dfioquDFIOQU0-9])[ ]?([0-9][^dfioquDFIOQU0-9])[0-9]",
             ErrorMessage = "Canadian Postal codes do not include the letters D, F, I, O, Q or U, and the first position also does not make use of the letters W or Z.")]
         [Display(Name = "Postal Code")]
         public string PostalCode { get; set; }
@@ -491,11 +493,20 @@ namespace BITCollege_XW.Models
         //More than 1 Registration object.
         public virtual ICollection<Registration> Registration { get; set; }
 
+        //More than 1 StudentCard object.
+        public virtual ICollection<StudentCard> StudentCard { get; set; }
+
         //Change Grade Point State.
+        //https://localhost:44335/Students
         public void ChangeState()
         {
             GradePointState gradePointState = db.GradePointStates.Find(this.GradePointStateId);
             gradePointState.StateChangeCheck(this);
+        }
+
+        public void SetNextStudentNumber()
+        {
+            StudentNumber = (long)StoredProcedure.NextNumber("NextStudent");
         }
     }
 
@@ -543,7 +554,7 @@ namespace BITCollege_XW.Models
         public int CourseId { get; set; }
 
         //Indicates Registration number.
-        [Required]
+        //[Required]
         [Display(Name = "Registration Number")]
         public long RegistrationNumber { get; set; }
 
@@ -567,6 +578,14 @@ namespace BITCollege_XW.Models
 
         //0 or 1 Course object.
         public virtual Course Course { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SetNextRegistrationNumber()
+        {
+            RegistrationNumber = (long)StoredProcedure.NextNumber("NextRegistration");
+        }
     }
 
     /// <summary>
@@ -580,10 +599,10 @@ namespace BITCollege_XW.Models
 
         //Foreign key to AcademicProgram.
         [ForeignKey("AcademicProgram")]
-        public int AcademicProgramId { get; set; }
+        public int? AcademicProgramId { get; set; }
 
         //Indicates course number.
-        [Required]
+        //[Required]
         [Display(Name = "Course Number")]
         public string CourseNumber { get; set; }
 
@@ -616,12 +635,14 @@ namespace BITCollege_XW.Models
 
         //Registration collection.
         public virtual ICollection<Registration> Registration { get; set; }
+
+        public abstract void SetNextCourseNumber();
     }
 
     /// <summary>
     /// GradedCourse Model - to represent GradedCourse table in database.
     /// </summary>
-    public class GradedCourse: Course
+    public class GradedCourse : Course
     {
         //Assignment weight in percentage.
         [Required]
@@ -640,6 +661,11 @@ namespace BITCollege_XW.Models
         [Display(Name = "Final Weight")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:P2}")]
         public double FinalWeight { get; set; }
+
+        public override void SetNextCourseNumber()
+        {
+            CourseNumber = "G-" + ((long)(StoredProcedure.NextNumber("NextGradedCourse"))).ToString();
+        }
     }
 
     /// <summary>
@@ -647,7 +673,10 @@ namespace BITCollege_XW.Models
     /// </summary>
     public class AuditCourse : Course
     {
-        
+        public override void SetNextCourseNumber()
+        {
+            CourseNumber = "A-" + ((long)(StoredProcedure.NextNumber("NextAuditCourse"))).ToString();
+        }
     }
 
     /// <summary>
@@ -658,5 +687,233 @@ namespace BITCollege_XW.Models
         [Required]
         [Display(Name = "Maximum Attempts")]
         public int MaximumAttempts { get; set; }
+
+        public override void SetNextCourseNumber()
+        {
+            CourseNumber = "M-" + ((long)(StoredProcedure.NextNumber("NextMasteryCourse"))).ToString();
+        }
+    }
+
+    public class StudentCard
+    {
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int StudentCardId { get; set; }
+
+        [Required]
+        [ForeignKey("Student")]
+        public int StudentId { get; set; }
+
+        [Required]
+        public long CardNumber { get; set; }
+
+        public virtual Student Student { get; set; }
+    }
+
+
+    public abstract class NextUniqueNumber 
+    {
+        protected static BITCollege_XWContext dbNextUniqueNumber = new BITCollege_XWContext();
+
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
+        public int NextUniqueNumberId { get; set; }
+
+        [Required]
+        public long NextAvailableNumber { get; set; }
+    }
+
+    public class NextGradedCourse : NextUniqueNumber
+    {
+        private static NextGradedCourse nextGradedCourse;
+
+        private NextGradedCourse()
+        {
+            NextAvailableNumber = 200000;
+        }
+
+        public static NextGradedCourse GetInstance()
+        {
+            if (nextGradedCourse == null)
+            {
+                NextGradedCourse susState = dbNextUniqueNumber.NextGradedCourses.SingleOrDefault();
+                if (susState != null)
+                {
+                    nextGradedCourse = susState;
+                }
+                else
+                {
+                    nextGradedCourse = new NextGradedCourse();
+                    dbNextUniqueNumber.NextGradedCourses.Add(nextGradedCourse);
+                    dbNextUniqueNumber.SaveChanges();
+                }
+            }
+
+            return nextGradedCourse;
+        }
+    }
+
+    public class NextStudent: NextUniqueNumber
+    {
+        private static NextStudent nextStudent;
+
+        private NextStudent()
+        {
+            NextAvailableNumber = 20000000;
+        }
+
+        public static NextStudent GetInstance()
+        {
+            if (nextStudent == null)
+            {
+                NextStudent susState = dbNextUniqueNumber.NextStudents.SingleOrDefault();
+                if (susState != null)
+                {
+                    nextStudent = susState;
+                }
+                else
+                {
+                    nextStudent = new NextStudent();
+                    dbNextUniqueNumber.NextStudents.Add(nextStudent);
+                    dbNextUniqueNumber.SaveChanges();
+                }
+            }
+
+            return nextStudent;
+        }
+    }
+
+    public class NextAuditCourse : NextUniqueNumber
+    {
+        private static NextAuditCourse nextAuditCourse;
+
+        private NextAuditCourse()
+        {
+            NextAvailableNumber = 2000;
+        }
+
+        public static NextAuditCourse GetInstance()
+        {
+            if (nextAuditCourse == null)
+            {
+                NextAuditCourse susState = dbNextUniqueNumber.NextAuditCourses.SingleOrDefault();
+                if (susState != null)
+                {
+                    nextAuditCourse = susState;
+                }
+                else
+                {
+                    nextAuditCourse = new NextAuditCourse();
+                    dbNextUniqueNumber.NextAuditCourses.Add(nextAuditCourse);
+                    dbNextUniqueNumber.SaveChanges();
+                }
+            }
+            return nextAuditCourse;
+        }
+    }
+
+    public class NextRegistration : NextUniqueNumber
+    {
+        private static NextRegistration nextRegistration;
+
+        private NextRegistration()
+        {
+            NextAvailableNumber = 700;
+        }
+
+        public static NextRegistration GetInstance()
+        {
+            if (nextRegistration == null)
+            {
+                NextRegistration susState = dbNextUniqueNumber.NextRegistrations.SingleOrDefault();
+                if (susState != null)
+                {
+                    nextRegistration = susState;
+                }
+                else
+                {
+                    nextRegistration = new NextRegistration();
+                    dbNextUniqueNumber.NextRegistrations.Add(nextRegistration);
+                    dbNextUniqueNumber.SaveChanges();
+                }
+            }
+
+            return nextRegistration;
+        }
+    }
+
+    public class NextMasteryCourse : NextUniqueNumber
+    {
+        private static NextMasteryCourse nextMasteryCourse;
+
+        private NextMasteryCourse()
+        {
+            NextAvailableNumber = 20000;
+        }
+
+        public static NextMasteryCourse GetInstance()
+        {
+            if (nextMasteryCourse == null)
+            {
+                NextMasteryCourse susState = dbNextUniqueNumber.NextMasteryCourses.SingleOrDefault();
+                if (susState != null)
+                {
+                    nextMasteryCourse = susState;
+                }
+                else
+                {
+                    nextMasteryCourse = new NextMasteryCourse();
+                    dbNextUniqueNumber.NextMasteryCourses.Add(nextMasteryCourse);
+                    dbNextUniqueNumber.SaveChanges();
+                }
+            }
+
+            return nextMasteryCourse;
+        }
+    }
+
+    public static class StoredProcedure
+    {
+        public static long? NextNumber(string discriminator)
+        {
+            try
+            {
+                //Open database.
+                SqlConnection connection = new SqlConnection("Data Source=localhost;" + "Initial Catalog=BITCollege_XWContext;Integrated Security=True");
+                long? returnValue = 0;
+
+                SqlCommand storedProcedure = new SqlCommand("next_number", connection);
+                storedProcedure.CommandType = CommandType.StoredProcedure;
+
+                //Input parameter
+                storedProcedure.Parameters.AddWithValue("@Discriminator", discriminator);
+
+                //Output parameter
+                SqlParameter outputParameter = new SqlParameter("@NewVal", SqlDbType.BigInt)
+                {
+                    Direction = ParameterDirection.Output
+                };
+
+                storedProcedure.Parameters.Add(outputParameter);
+                connection.Open();
+                storedProcedure.ExecuteNonQuery();
+                connection.Close();
+                returnValue = (long?)outputParameter.Value;
+                return returnValue;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
     }
 }
+
+//return View(NextStudent.GetInstance());
+//
+//NextStudent
+//NextGradedCourse
+//NextAuditCourse
+//NextMasteryCourse
+//NextRegistration

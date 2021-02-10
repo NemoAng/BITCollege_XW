@@ -48,6 +48,9 @@ namespace BITCollege_XW.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "RegistrationId,StudentId,CourseId,RegistrationNumber,RegistrationDate,Grade,Notes")] Registration registration)
         {
+            //StoredProcedure.NextNumber("NextRegistration");
+            registration.SetNextRegistrationNumber();
+
             if (ModelState.IsValid)
             {
                 db.Registrations.Add(registration);

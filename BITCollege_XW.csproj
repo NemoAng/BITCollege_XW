@@ -137,28 +137,63 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HonoursStatesController.cs" />
     <Compile Include="Controllers\MasteryCoursesController.cs" />
+    <Compile Include="Controllers\NextAuditCoursesController.cs" />
+    <Compile Include="Controllers\NextGradedCoursesController.cs" />
+    <Compile Include="Controllers\NextMasteryCoursesController.cs" />
+    <Compile Include="Controllers\NextRegistrationsController.cs" />
+    <Compile Include="Controllers\NextStudentsController.cs" />
+    <Compile Include="Controllers\NextUniqueNumbersController.cs" />
     <Compile Include="Controllers\ProbationStatesController.cs" />
     <Compile Include="Controllers\RegistrationsController.cs" />
     <Compile Include="Controllers\RegularStatesController.cs" />
+    <Compile Include="Controllers\StudentCardsController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="Controllers\SuspendedStatesController.cs" />
     <Compile Include="Data\BITCollege_XWContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202101190441452_InitialCreate.cs" />
+    <Compile Include="Migrations\202101190441452_InitialCreate.Designer.cs">
+      <DependentUpon>202101190441452_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102062252269_AddedChanges.cs" />
+    <Compile Include="Migrations\202102062252269_AddedChanges.Designer.cs">
+      <DependentUpon>202102062252269_AddedChanges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102070340297_AddedChangeAcademicProgramIdNullable.cs" />
+    <Compile Include="Migrations\202102070340297_AddedChangeAcademicProgramIdNullable.Designer.cs">
+      <DependentUpon>202102070340297_AddedChangeAcademicProgramIdNullable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102070444434_AddedStoredProcedures.cs" />
+    <Compile Include="Migrations\202102070444434_AddedStoredProcedures.Designer.cs">
+      <DependentUpon>202102070444434_AddedStoredProcedures.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202102091845391_AddedBugFix.cs" />
+    <Compile Include="Migrations\202102091845391_AddedBugFix.Designer.cs">
+      <DependentUpon>202102091845391_AddedBugFix.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\SchoolModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Data\AAA.txt" />
+    <Content Include="AAA.txt" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <None Include="Migrations\SQL\create_next_number.sql" />
+    <None Include="Migrations\SQL\drop_next_number.sql" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
@@ -232,11 +267,37 @@
     <Content Include="Views\ProbationStates\Index.cshtml" />
     <Content Include="Views\RegularStates\Index.cshtml" />
     <Content Include="Views\SuspendedStates\Index.cshtml" />
+    <Content Include="Views\StudentCards\Create.cshtml" />
+    <Content Include="Views\StudentCards\Delete.cshtml" />
+    <Content Include="Views\StudentCards\Details.cshtml" />
+    <Content Include="Views\StudentCards\Edit.cshtml" />
+    <Content Include="Views\StudentCards\Index.cshtml" />
+    <Content Include="Views\NextAuditCourses\Delete.cshtml" />
+    <Content Include="Views\NextAuditCourses\Details.cshtml" />
+    <Content Include="Views\NextAuditCourses\Edit.cshtml" />
+    <Content Include="Views\NextGradedCourses\Delete.cshtml" />
+    <Content Include="Views\NextGradedCourses\Details.cshtml" />
+    <Content Include="Views\NextGradedCourses\Edit.cshtml" />
+    <Content Include="Views\NextMasteryCourses\Delete.cshtml" />
+    <Content Include="Views\NextMasteryCourses\Details.cshtml" />
+    <Content Include="Views\NextMasteryCourses\Edit.cshtml" />
+    <Content Include="Views\NextRegistrations\Delete.cshtml" />
+    <Content Include="Views\NextRegistrations\Details.cshtml" />
+    <Content Include="Views\NextRegistrations\Edit.cshtml" />
+    <Content Include="Views\NextStudents\Delete.cshtml" />
+    <Content Include="Views\NextStudents\Details.cshtml" />
+    <Content Include="Views\NextStudents\Edit.cshtml" />
+    <Content Include="Views\NextAuditCourses\Index.cshtml" />
+    <Content Include="Views\NextGradedCourses\Index.cshtml" />
+    <Content Include="Views\NextMasteryCourses\Index.cshtml" />
+    <Content Include="Views\NextRegistrations\Index.cshtml" />
+    <Content Include="Views\NextStudents\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Courses\" />
     <Folder Include="Views\GradePointStates\" />
+    <Folder Include="Views\NextUniqueNumbers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -250,6 +311,27 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202101190441452_InitialCreate.resx">
+      <DependentUpon>202101190441452_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102062252269_AddedChanges.resx">
+      <DependentUpon>202102062252269_AddedChanges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102070340297_AddedChangeAcademicProgramIdNullable.resx">
+      <DependentUpon>202102070340297_AddedChangeAcademicProgramIdNullable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102070444434_AddedStoredProcedures.resx">
+      <DependentUpon>202102070444434_AddedStoredProcedures.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202102091845391_AddedBugFix.resx">
+      <DependentUpon>202102091845391_AddedBugFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
