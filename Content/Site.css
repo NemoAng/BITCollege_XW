@@ -33,3 +33,10 @@ textarea {
 #CreditHours, #TuitionAmount, #AssignmentWeight, #MidtermWeight, #FinalWeight, #GradePointAverage, #OutstandingFees, #LowerLimit, #UpperLimit, #TuitionRateFactor, #Grade {
     text-align: right;
 }
+
+
+/* Just for convenience */
+.nav li.MyItems a {
+    font-weight: bold;
+    color: red;
+}

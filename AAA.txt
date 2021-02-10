@@ -64,6 +64,8 @@ o MasteryCourses
 o AuditCourses
 
 
+https://localhost:44335/
+
 
 
 
