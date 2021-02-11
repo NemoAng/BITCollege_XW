@@ -48,6 +48,9 @@ namespace BITCollege_XW.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "StudentID,GradePointStateId,AcademicProgramId,StudentNumber,FirstName,LastName,Address,City,Province,PostalCode,DateCreated,GradePointAverage,OutstandingFees,Notes")] Student student)
         {
+            //StoredProcedure.NextNumber("NextStudent");
+            student.SetNextStudentNumber();
+
             if (ModelState.IsValid)
             {
                 //Change grade point state calling. 

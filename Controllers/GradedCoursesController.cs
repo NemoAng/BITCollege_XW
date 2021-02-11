@@ -47,6 +47,8 @@ namespace BITCollege_XW.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CourseId,AcademicProgramId,CourseNumber,Title,CreditHours,TuitionAmount,Notes,AssignmentWeight,MidtermWeight,FinalWeight")] GradedCourse gradedCourse)
         {
+            //StoredProcedure.NextNumber("NextGradedCourse");
+            gradedCourse.SetNextCourseNumber();
             if (ModelState.IsValid)
             {
                 db.Courses.Add(gradedCourse);

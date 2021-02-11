@@ -47,6 +47,8 @@ namespace BITCollege_XW.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "CourseId,AcademicProgramId,CourseNumber,Title,CreditHours,TuitionAmount,Notes,MaximumAttempts")] MasteryCourse masteryCourse)
         {
+            //StoredProcedure.NextNumber("NextMasteryCourse");
+            masteryCourse.SetNextCourseNumber();
             if (ModelState.IsValid)
             {
                 db.Courses.Add(masteryCourse);
