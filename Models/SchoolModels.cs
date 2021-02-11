@@ -453,14 +453,14 @@ namespace BITCollege_XW.Models
 
         //Average Grade Point.
         [Display(Name = "Grade Point Average")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:F2}")]
+        [DisplayFormat(ApplyFormatInEditMode = false, DataFormatString = "{0:F2}")]
         [Range(0, 4.5, ErrorMessage = "Value for {0} must be between {1} and {2}.")]
         public double? GradePointAverage { get; set; }
 
         //Outstanding fees in currency format.
         [Required]
         [Display(Name = "Outstanding Fees")]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:C2}")]
+        [DisplayFormat(ApplyFormatInEditMode = false, DataFormatString = "{0:C2}")]
         public double OutstandingFees { get; set; }
 
         public string Notes { get; set; }
@@ -616,7 +616,7 @@ namespace BITCollege_XW.Models
 
         //Final weight in currency.
         [Required]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:C2}")]
+        [DisplayFormat(ApplyFormatInEditMode = false, DataFormatString = "{0:C2}")]
         [Display(Name = "Tuition Amount")]
         public double TuitionAmount { get; set; }
 
@@ -709,7 +709,9 @@ namespace BITCollege_XW.Models
         public virtual Student Student { get; set; }
     }
 
-
+    /// <summary>
+    /// Next unique number and singleton static content.
+    /// </summary>
     public abstract class NextUniqueNumber 
     {
         protected static BITCollege_XWContext dbNextUniqueNumber = new BITCollege_XWContext();
@@ -722,6 +724,9 @@ namespace BITCollege_XW.Models
         public long NextAvailableNumber { get; set; }
     }
 
+    /// <summary>
+    /// Next graded course
+    /// </summary>
     public class NextGradedCourse : NextUniqueNumber
     {
         private static NextGradedCourse nextGradedCourse;
@@ -752,6 +757,9 @@ namespace BITCollege_XW.Models
         }
     }
 
+    /// <summary>
+    /// Next student number.
+    /// </summary>
     public class NextStudent: NextUniqueNumber
     {
         private static NextStudent nextStudent;
@@ -782,6 +790,9 @@ namespace BITCollege_XW.Models
         }
     }
 
+    /// <summary>
+    /// Next audit course number.
+    /// </summary>
     public class NextAuditCourse : NextUniqueNumber
     {
         private static NextAuditCourse nextAuditCourse;
@@ -811,6 +822,9 @@ namespace BITCollege_XW.Models
         }
     }
 
+    /// <summary>
+    /// Next registration number.
+    /// </summary>
     public class NextRegistration : NextUniqueNumber
     {
         private static NextRegistration nextRegistration;
@@ -841,6 +855,9 @@ namespace BITCollege_XW.Models
         }
     }
 
+    /// <summary>
+    /// Next mastery course number
+    /// </summary>
     public class NextMasteryCourse : NextUniqueNumber
     {
         private static NextMasteryCourse nextMasteryCourse;
@@ -871,6 +888,9 @@ namespace BITCollege_XW.Models
         }
     }
 
+    /// <summary>
+    /// Stored Procedure.
+    /// </summary>
     public static class StoredProcedure
     {
         public static long? NextNumber(string discriminator)
@@ -909,11 +929,3 @@ namespace BITCollege_XW.Models
         }
     }
 }
-
-//return View(NextStudent.GetInstance());
-//
-//NextStudent
-//NextGradedCourse
-//NextAuditCourse
-//NextMasteryCourse
-//NextRegistration
