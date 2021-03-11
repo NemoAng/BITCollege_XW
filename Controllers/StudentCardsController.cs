@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using BITCollege_XW.Data;
 using BITCollege_XW.Models;
@@ -13,7 +9,7 @@ namespace BITCollege_XW.Controllers
 {
     public class StudentCardsController : Controller
     {
-        private BITCollege_XWContext db = new BITCollege_XWContext();
+        private readonly BITCollege_XWContext db = new BITCollege_XWContext();
 
         // GET: StudentCards
         public ActionResult Index()
