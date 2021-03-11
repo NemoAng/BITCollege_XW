@@ -390,7 +390,7 @@ namespace BITCollege_XW.Models
     public class Student
     {
         //database context.
-        BITCollege_XWContext db = new BITCollege_XWContext();
+        readonly BITCollege_XWContext db = new BITCollege_XWContext();
 
         //Annotation to have database generate next available primary key.
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
@@ -901,8 +901,10 @@ namespace BITCollege_XW.Models
                 SqlConnection connection = new SqlConnection("Data Source=localhost;" + "Initial Catalog=BITCollege_XWContext;Integrated Security=True");
                 long? returnValue = 0;
 
-                SqlCommand storedProcedure = new SqlCommand("next_number", connection);
-                storedProcedure.CommandType = CommandType.StoredProcedure;
+                SqlCommand storedProcedure = new SqlCommand("next_number", connection)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
 
                 //Input parameter
                 storedProcedure.Parameters.AddWithValue("@Discriminator", discriminator);

@@ -68,5 +68,28 @@ https://localhost:44335/
 
 
 
+//Assignment 5
+USE [BITCollege_XWContext]
+GO
+DBCC CHECKIDENT(Registrations, reseed, 400)
+GO
+
+
+--insert statement
+INSERT INTO [BITCollege_XWContext].[dbo].[Registrations]
+           ([StudentId]
+           ,[CourseId]
+           ,[RegistrationNumber]
+		   ,[Grade]
+           ,[RegistrationDate]
+		   ,[Notes])
+     VALUES
+ (29,102,401,NULL,'4-Jan-18','Assignment 5')
+,(29,113,402,NULL,'4-Jan-18','Assignment 5')
+,(29,142,403,NULL,'4-Jan-18','Assignment 5')
+,(29,161,404,NULL,'4-Jan-18','Assignment 5')
+
+
+GO
 
 

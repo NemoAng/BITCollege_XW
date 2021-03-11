@@ -9,7 +9,7 @@ namespace BITCollege_XW.Controllers
 {
     public class StudentsController : Controller
     {
-        private BITCollege_XWContext db = new BITCollege_XWContext();
+        private readonly BITCollege_XWContext db = new BITCollege_XWContext();
 
         // GET: Students
         public ActionResult Index()
